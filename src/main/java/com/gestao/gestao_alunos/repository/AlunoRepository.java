@@ -12,4 +12,6 @@ import java.util.List;
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
     List<Aluno> findAllByNomeIgnoreCaseContaining(String nome, Pageable pageable);
+
+    Aluno findById(Integer id);
 }

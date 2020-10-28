@@ -36,10 +36,10 @@ public class AlunoController {
 
         try {
             alunoRepository.save(aluno);
-            return new ResponseEntity(HttpStatus.CREATED); // status 200
+            return new ResponseEntity(HttpStatus.CREATED); // status 201
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new ResponseEntity("Erro ao salvar usuario", HttpStatus.INTERNAL_SERVER_ERROR); // 500
+            return new ResponseEntity("Erro ao salvar aluno", HttpStatus.INTERNAL_SERVER_ERROR); // 500
         }
     }
 
@@ -54,8 +54,28 @@ public class AlunoController {
             return new ResponseEntity(listaAlunos, HttpStatus.OK); // 200
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity("Erro ao buscar usuarios", HttpStatus.INTERNAL_SERVER_ERROR); // 500
+            return new ResponseEntity("Erro ao buscar alunos", HttpStatus.INTERNAL_SERVER_ERROR); // 500
         }
+    }
+
+    @RequestMapping(value="/{id}", method= {RequestMethod.DELETE, RequestMethod.GET})
+    public ResponseEntity deletarAluno(@PathVariable Integer id) {
+        try {
+            Aluno aluno = alunoRepository.findById(id);
+
+            if (aluno == null) {
+                return new ResponseEntity("Aluno nao encontrado", HttpStatus.NOT_FOUND); //404
+            }
+
+            Aluno alunoDeletado = aluno;
+            alunoRepository.delete(alunoDeletado);
+            return new ResponseEntity(alunoDeletado, HttpStatus.OK); //200
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity("Erro ao deletar aluno", HttpStatus.INTERNAL_SERVER_ERROR); // 500
+        }
+
     }
 
 }
