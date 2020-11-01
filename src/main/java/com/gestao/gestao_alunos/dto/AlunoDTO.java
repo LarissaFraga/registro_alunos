@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AlunoDTO {
+    private Integer id;
     private String rga;
     private String nome;
     private String curso;
@@ -15,11 +16,20 @@ public class AlunoDTO {
     public AlunoDTO() { }
 
     public AlunoDTO(Aluno aluno) {
+        this.id = aluno.getId();
         this.rga = aluno.getRga();
         this.nome = aluno.getNome();
         this.curso = aluno.getCurso();
         this.situacao = aluno.isSituacao() ? "ativo" : "inativo";
         this.registradoEm = formatarData(aluno.getRegistradoEm());
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getRga() {
