@@ -81,12 +81,19 @@ public class AlunoController {
     @GetMapping("/{id)")
     public ResponseEntity buscarAluno(@PathVariable int id) {
         try {
-            // pegando valores do nome com ignore case e LIKE '%nome%'
             Aluno aluno = alunoRepository.findById(id);
+
+            if (aluno == null) {
+                return new ResponseEntity("Aluno nao encontrado", HttpStatus.NOT_FOUND); //404
+            }
+
+            new AlunoDTO(aluno);
+
             return new ResponseEntity(aluno, HttpStatus.OK); // 200
+
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity("Aluno nao encontrado", HttpStatus.NOT_FOUND); //404
+            return new ResponseEntity("Erro ao buscar aluno", HttpStatus.INTERNAL_SERVER_ERROR); //500
         }
     }
 
@@ -110,7 +117,13 @@ public class AlunoController {
         }
 
     }
-    
+
+    //delete
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity deletarAlunos(@PathVariable int id){
+        return new ResponseEntity("Metodo nao permitido", HttpStatus.METHOD_NOT_ALLOWED); // 405
+    }
+
     //put
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     public ResponseEntity atualizarAluno(@PathVariable Integer id, @RequestBody AlunoDTO alunoDTO) {
