@@ -46,6 +46,13 @@ public class AlunoController {
         }
     }
 
+    //post
+    @PostMapping("/{id}")
+    public ResponseEntity responderErro(@PathVariable int id){
+        return new ResponseEntity("Metodo nao permitido", HttpStatus.METHOD_NOT_ALLOWED); // 405
+    }
+
+
     //get
     @GetMapping("/{limite}/{pagina}/{nome}")
     public ResponseEntity buscarTodosAlunos(@PathVariable int limite, @PathVariable int pagina, @PathVariable String nome) {
@@ -67,6 +74,19 @@ public class AlunoController {
         } catch(Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity("Erro ao buscar alunos", HttpStatus.INTERNAL_SERVER_ERROR); // 500
+        }
+    }
+
+    //get
+    @GetMapping("/{id)")
+    public ResponseEntity buscarAluno(@PathVariable int id) {
+        try {
+            // pegando valores do nome com ignore case e LIKE '%nome%'
+            Aluno aluno = alunoRepository.findById(id);
+            return new ResponseEntity(aluno, HttpStatus.OK); // 200
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity("Aluno nao encontrado", HttpStatus.NOT_FOUND); //404
         }
     }
 
@@ -116,6 +136,7 @@ public class AlunoController {
             ex.printStackTrace();
             return new ResponseEntity("Erro ao atualizar aluno", HttpStatus.INTERNAL_SERVER_ERROR); // 404
         }
+
     }
 
 }
