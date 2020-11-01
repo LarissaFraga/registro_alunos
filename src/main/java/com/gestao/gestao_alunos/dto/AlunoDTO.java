@@ -1,9 +1,26 @@
 package com.gestao.gestao_alunos.dto;
 
+import com.gestao.gestao_alunos.model.Aluno;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class AlunoDTO {
     private String rga;
     private String nome;
     private String curso;
+    private String situacao;
+    private String registradoEm;
+
+    public AlunoDTO() { }
+
+    public AlunoDTO(Aluno aluno) {
+        this.rga = aluno.getRga();
+        this.nome = aluno.getNome();
+        this.curso = aluno.getCurso();
+        this.situacao = aluno.isSituacao() ? "ativo" : "inativo";
+        this.registradoEm = formatarData(aluno.getRegistradoEm());
+    }
 
     public String getRga() {
         return rga;
@@ -28,4 +45,26 @@ public class AlunoDTO {
     public void setCurso(String curso) {
         this.curso = curso;
     }
+
+    public String getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(String situacao) {
+        this.situacao = situacao;
+    }
+
+    public String getRegistradoEm() {
+        return registradoEm;
+    }
+
+    public void setRegistradoEm(String registradoEm) {
+        this.registradoEm = registradoEm;
+    }
+
+    private String formatarData (Date data) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return simpleDateFormat.format(data);
+    }
+
 }

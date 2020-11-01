@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,13 +49,21 @@ public class AlunoController {
     //get
     @GetMapping("/{limite}/{pagina}/{nome}")
     public ResponseEntity buscarTodosAlunos(@PathVariable int limite, @PathVariable int pagina, @PathVariable String nome) {
-        // comeca sempre na pagina 0, por isso faço a verificacao
-        pagina = pagina > 0 ? pagina - 1 : pagina;
-        Pageable pageable = PageRequest.of(pagina, limite);
+
         try {
+            // comeca sempre na pagina 0, por isso faço a verificacao
+            pagina = pagina > 0 ? pagina - 1 : pagina;
+            Pageable pageable = PageRequest.of(pagina, limite);
+            List<AlunoDTO> listaAlunosDTO= new ArrayList<>();
+
             // pegando valores do nome com ignore case e LIKE '%nome%'
             List<Aluno> listaAlunos = alunoRepository.findAllByNomeIgnoreCaseContaining(nome, pageable);
-            return new ResponseEntity(listaAlunos, HttpStatus.OK); // 200
+
+            for (Aluno aluno: listaAlunos) {
+                listaAlunosDTO.add(new AlunoDTO(aluno));
+            }
+
+            return new ResponseEntity(listaAlunosDTO, HttpStatus.OK); // 200
         } catch(Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity("Erro ao buscar alunos", HttpStatus.INTERNAL_SERVER_ERROR); // 500
