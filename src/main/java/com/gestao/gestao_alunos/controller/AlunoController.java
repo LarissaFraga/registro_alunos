@@ -20,13 +20,14 @@ public class AlunoController {
     @Autowired
     private AlunoRepository alunoRepository;
 
+    //post
     @PostMapping
     public ResponseEntity salvarAluno(@RequestBody AlunoDTO alunoDTO) {
         Aluno aluno = new Aluno();
 
-//        if (verificarParametros(alunoDTO)){
-//            return new ResponseEntity("Erro de parametros ",BAD_REQUEST);
-//        }
+        //if (verificarParametros(alunoDTO)){
+        //    return new ResponseEntity("Erro de parametros ",BAD_REQUEST);
+        //}
 
         aluno.setCurso(alunoDTO.getCurso());
         aluno.setNome(alunoDTO.getNome());
@@ -43,6 +44,7 @@ public class AlunoController {
         }
     }
 
+    //get
     @GetMapping("/{limite}/{pagina}/{nome}")
     public ResponseEntity buscarTodosAlunos(@PathVariable int limite, @PathVariable int pagina, @PathVariable String nome) {
         // comeca sempre na pagina 0, por isso faço a verificacao
@@ -58,6 +60,7 @@ public class AlunoController {
         }
     }
 
+    //delete
     @RequestMapping(value="/{id}", method= {RequestMethod.DELETE, RequestMethod.GET})
     public ResponseEntity deletarAluno(@PathVariable Integer id) {
         try {
@@ -76,6 +79,33 @@ public class AlunoController {
             return new ResponseEntity("Erro ao deletar aluno", HttpStatus.INTERNAL_SERVER_ERROR); // 500
         }
 
+    }
+    
+    //put
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    public ResponseEntity atualizarAluno(@PathVariable Integer id, @RequestBody AlunoDTO alunoDTO) {
+        try {
+            Aluno aluno = alunoRepository.findById(id);
+
+            if (aluno == null) {
+                return new ResponseEntity("Aluno nao encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            aluno.setCurso(alunoDTO.getCurso());
+            aluno.setNome(alunoDTO.getNome());
+            aluno.setRga(alunoDTO.getRga());
+            aluno.setRegistradoEm(aluno.getRegistradoEm());
+            aluno.setSituacao(Boolean.TRUE);
+
+            Aluno alunoAtualizado = aluno;
+            alunoRepository.save(alunoAtualizado);
+
+            return new ResponseEntity(alunoAtualizado, HttpStatus.OK); //200
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity("Erro ao atualizar aluno", HttpStatus.INTERNAL_SERVER_ERROR); // 404
+        }
     }
 
 }
